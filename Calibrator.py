@@ -3,7 +3,7 @@ from threading import Thread
 import copy
 import os
 
-import tkfilebrowser
+import tkinter.filedialog
 import numpy as np
 import cv2 as cv
 
@@ -149,8 +149,6 @@ class Calibrator(object):
         else:
 
             self.__gui.remove_previews_images_after_correction()
-#            self.__gui.remove_previews_image_after_processing_contours()
-#            self.__gui.remove_previews_image_after_processing_image()
 
     def __disable_when_no_images_for_distortion_correction(self):
 
@@ -393,7 +391,7 @@ class Calibrator(object):
 
     def select_images_distortion(self):
 
-        images = tkfilebrowser.askopenfilenames()
+        images = tkinter.filedialog.askopenfilenames()
 
         self.__paths_to_images_distortion = list(images)
 
@@ -408,7 +406,7 @@ class Calibrator(object):
 
     def select_image_perspective(self):
 
-        image = tkfilebrowser.askopenfilename()
+        image = tkinter.filedialog.askopenfilename()
 
         self.__path_to_image_perspective = image
 

@@ -3,7 +3,7 @@ import datetime
 import copy
 import os
 
-import tkfilebrowser
+import tkinter.filedialog
 import numpy as np
 import cv2 as cv
 
@@ -104,7 +104,7 @@ class Meter(object):
 
         threshold = self.__gui_settings["threshold"]
 
-        begining = datetime.datetime.now()
+        beginning = datetime.datetime.now()
 
         self.__measure_contours.image_binary = self.__threshold_image(self.__measure_contours.image_source, threshold)
         self.__measure_contours.contours_source = self.__find_contours(self.__measure_contours.image_binary)
@@ -113,8 +113,8 @@ class Meter(object):
         self.__measure_contours.contours_no_distortion_no_perspective = self.__correct_perspective_contours(
             self.__measure_contours.contours_no_distortion)
         self.__measure_contours.centres_no_distortion_no_perspective, \
-        self.__measure_contours.radiuses_no_distortion_no_perspective = self.__calculate_centres_and_radiuses(
-            self.__measure_contours.contours_no_distortion_no_perspective)
+            self.__measure_contours.radiuses_no_distortion_no_perspective = self.__calculate_centres_and_radiuses(
+                self.__measure_contours.contours_no_distortion_no_perspective)
         self.__measure_contours.centres_source, self.__measure_contours.radiuses_source = \
             self.__calculate_centres_and_radiuses(self.__measure_contours.contours_source)
         self.__measure_contours.image_for_results = self.__measure_contours.image_source
@@ -124,7 +124,7 @@ class Meter(object):
 
         end = datetime.datetime.now()
 
-        self.__measure_contours.measure_time = (end - begining).total_seconds()
+        self.__measure_contours.measure_time = (end - beginning).total_seconds()
 
         self.__gui.display_image(self.__measure_contours.image_source, self.__gui.window_preview_u_l)
         self.__gui.display_image(self.__measure_contours.image_binary, self.__gui.window_preview_u_r)
@@ -138,7 +138,7 @@ class Meter(object):
 
         threshold = self.__gui_settings["threshold"]
 
-        begining = datetime.datetime.now()
+        beginning = datetime.datetime.now()
 
         self.__measure_image.image_no_distortion = self.__correct_distortion_image(self.__measure_image.image_source)
         self.__measure_image.image_no_distortion_no_perspective = self.__correct_perspective_image(
@@ -148,8 +148,8 @@ class Meter(object):
         self.__measure_image.contours_no_distortion_no_perspective = self.__find_contours(
             self.__measure_image.image_binary)
         self.__measure_image.centres_no_distortion_no_perspective, \
-        self.__measure_image.radiuses_no_distortion_no_perspective = self.__calculate_centres_and_radiuses(
-            self.__measure_image.contours_no_distortion_no_perspective)
+            self.__measure_image.radiuses_no_distortion_no_perspective = self.__calculate_centres_and_radiuses(
+                self.__measure_image.contours_no_distortion_no_perspective)
         self.__measure_image.scale = self.__gui_settings["number_of_pixels_on_mm"]
         self.__measure_image.image_for_results = self.__measure_image.image_no_distortion_no_perspective
         self.__measure_image.radiuses_for_results = self.__measure_image.radiuses_no_distortion_no_perspective
@@ -158,7 +158,7 @@ class Meter(object):
 
         end = datetime.datetime.now()
 
-        self.__measure_image.measure_time = (end - begining).total_seconds()
+        self.__measure_image.measure_time = (end - beginning).total_seconds()
 
         self.__gui.display_image(self.__measure_image.image_with_results, self.__gui.window_preview_d_r)
         self.__gui.display_image(self.__measure_image.image_with_results, self.__gui.window_processing_image)
@@ -180,13 +180,13 @@ class Meter(object):
 
             points_without_distortion = cv.undistortPoints(points_with_distortion, camera_matrix, None)
 
-            points_homogeneus = cv.convertPointsToHomogeneous(points_without_distortion)
+            points_homogeneous = cv.convertPointsToHomogeneous(points_without_distortion)
 
             rotation_vector = np.array([0, 0, 0], dtype='float32')
             translation_vector = np.array([0, 0, 0], dtype='float32')
             distortion_coefficients = self.__calibration_results["distortion_coefficients"]
 
-            points_on_plane, _ = cv.projectPoints(points_homogeneus, rotation_vector, translation_vector, camera_matrix,
+            points_on_plane, _ = cv.projectPoints(points_homogeneous, rotation_vector, translation_vector, camera_matrix,
                                                   distortion_coefficients, points_without_distortion)
 
             contours_no_distortion.append(points_on_plane)
@@ -255,10 +255,10 @@ class Meter(object):
         dimension_ex_max = self.__gui_settings["dimension_external_max"]
         dimension_in_min = self.__gui_settings["dimension_internal_min"]
 
-        maximum_deviation_in_procent = 10
+        maximum_deviation_in_percent = 10
 
-        minimum = dimension_in_min - dimension_in_min * maximum_deviation_in_procent / 100
-        maximum = dimension_ex_max + dimension_ex_max * maximum_deviation_in_procent / 100
+        minimum = dimension_in_min - dimension_in_min * maximum_deviation_in_percent / 100
+        maximum = dimension_ex_max + dimension_ex_max * maximum_deviation_in_percent / 100
 
         if minimum < diameter < maximum:
             return True
@@ -364,7 +364,7 @@ class Meter(object):
 
     def select_images_for_measurement(self):
 
-        images = tkfilebrowser.askopenfilenames()
+        images = tkinter.filedialog.askopenfilenames()
 
         self.__paths_to_images_measurement = list(images)
 
