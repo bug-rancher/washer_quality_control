@@ -84,7 +84,7 @@ class Application(Frame):
 root = Tk()
 
 # Modify window
-root.title("Quality control v1.0.0")
+root.title("Washer Quality Control v1.0.0")
 root.resizable(False, False)
 
 # add a main frame
